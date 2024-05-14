@@ -6,7 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_1/models/catalog.dart';
 import 'package:flutter_application_1/pages/home_widgets/catalog_header.dart';
 import 'package:flutter_application_1/pages/home_widgets/catalog_image.dart';
+import 'package:flutter_application_1/utils/routes.dart';
 import 'package:flutter_application_1/widgets/drawer.dart';
+import 'package:flutter_application_1/widgets/themes.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../widgets/item_widget.dart';
 import 'home_widgets/catalog_list.dart';
@@ -38,8 +40,12 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-    // final dummyList = List.generate(10,(index) => Catalogue.items[0]);
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, MyRoutes.cartPageRoute),
+        backgroundColor: MyTheme.darkBluishColor,
+        child: Icon(Icons.shopping_cart,color: Colors.white),
+      ),
       body: SafeArea(
         child: Container(
           child: Column(

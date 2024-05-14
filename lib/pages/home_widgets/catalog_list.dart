@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/catalog.dart';
 import 'package:flutter_application_1/pages/home_detail.dart';
+import 'package:flutter_application_1/pages/home_widgets/add_to_cart.dart';
 // import 'package:flutter_application_1/pages/home_detail_page.dart';
 import 'package:flutter_application_1/widgets/themes.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -20,7 +21,7 @@ class CatalogList extends StatelessWidget {
           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> HomeDetailPage(catalog: catalog)
           )
           ),
-          child: CatalogItem(catalog: catalog),
+          child: CatalogItem(catalogItem: catalog),
         );
       },
     );
@@ -28,10 +29,10 @@ class CatalogList extends StatelessWidget {
 }
 
 class CatalogItem extends StatelessWidget {
-  final Item catalog;
+  final Item catalogItem;
 
-  const CatalogItem({Key? key, required this.catalog})
-      : assert(catalog != null),
+  const CatalogItem({Key? key, required this.catalogItem})
+      : assert(catalogItem != null),
         super(key: key);
 
   @override
@@ -40,9 +41,9 @@ class CatalogItem extends StatelessWidget {
       child: Row(
         children: [
           Hero(
-            tag: Key(catalog.id.toString()),
+            tag: Key(catalogItem.id.toString()),
             child: CatalogImage(
-              image: catalog.image.toString(),
+              image: catalogItem.image.toString(),
             ),
           ),
           Expanded(
@@ -50,25 +51,15 @@ class CatalogItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  catalog.name.text.lg.color(MyTheme.darkBluishColor).bold.make(),
-                  catalog.desc.text.textStyle(context.captionStyle).make(),
+                  catalogItem.name.text.lg.color(MyTheme.darkBluishColor).bold.make(),
+                  catalogItem.desc.text.textStyle(context.captionStyle).make(),
                   10.heightBox,
                   ButtonBar(
                     alignment: MainAxisAlignment.spaceBetween,
                     buttonPadding: EdgeInsets.zero,
                     children: [
-                      "\$${catalog.price}".text.bold.xl.make(),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              MyTheme.darkBluishColor,
-                            ),
-                            shape: MaterialStateProperty.all(
-                              StadiumBorder(),
-                            )),
-                        child: "Buy".text.color(MyTheme.creamColor).make(),
-                      )
+                      "\$${catalogItem.price}".text.bold.xl.make(),
+                      AddToCart(catalogItem: catalogItem)
                     ],
                   ).pOnly(right: 8.0)
                 ],

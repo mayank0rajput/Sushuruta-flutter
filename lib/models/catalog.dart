@@ -1,7 +1,12 @@
 class CatalogueModel{
-  static var items = [
-
+  static List<Item> items = [
   ];
+  // Get Item by ID
+  Item getById(int id) =>
+      items.firstWhere((element) => element.id == id, orElse: null);
+
+  // Get Item by position
+  Item getByPosition(int pos) => items[pos];
 }
 
 class Item{
@@ -32,4 +37,31 @@ class Item{
       "color" : color,
       "image" : image,
     };
+  @override
+  String toString() {
+    return 'Item(id: $id, name: $name, desc: $desc, price: $price, color: $color, image: $image)';
+  }
+
+  @override
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
+
+    return o is Item &&
+        o.id == id &&
+        o.name == name &&
+        o.desc == desc &&
+        o.price == price &&
+        o.color == color &&
+        o.image == image;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+    name.hashCode ^
+    desc.hashCode ^
+    price.hashCode ^
+    color.hashCode ^
+    image.hashCode;
+  }
 }
