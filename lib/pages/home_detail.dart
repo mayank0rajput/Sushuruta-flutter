@@ -21,7 +21,7 @@ class HomeDetailPage extends StatelessWidget {
         alignment: MainAxisAlignment.spaceBetween,
         buttonPadding: EdgeInsets.zero,
         children: [
-          "\$${catalog.price}".text.bold.xl4.make(),
+          "₹${catalog.price}".text.bold.xl4.make(),
           AddToCart(catalogItem :catalog)
         ],
       ).p32(),
@@ -29,9 +29,10 @@ class HomeDetailPage extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
+            catalog.name.text.xl4.color(Color(catalog.color.hashCode)).bold.make(),
             Hero(
               tag: Key(catalog.id.toString()),
-                child: Image.network(catalog.image.toString())
+                child: Image.asset(catalog.image.toString())
             ).h32(context),
             Expanded(
               child: VxArc(
@@ -44,7 +45,6 @@ class HomeDetailPage extends StatelessWidget {
                   color: MyTheme.creamColor,
                   child: Column(
                     children: [
-                      catalog.name.text.xl4.color(MyTheme.darkBluishColor).bold.make(),
                       catalog.desc.text.xl.textStyle(context.captionStyle).make(),
                     ],
                   ),

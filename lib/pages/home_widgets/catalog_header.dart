@@ -6,15 +6,14 @@ import 'package:velocity_x/velocity_x.dart';
 class CatalogHeader extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: Vx.m32,
+    return Material(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          "Catalog App".text.xl5.bold.color(MyTheme.darkBluishColor).make(),
-          "Trending Products".text.xl2.make(),
-        ],
-      ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            "Sushuruta".text.xl5.bold.color(MyTheme.darkBluishColor).make(),
+            "Premium Dry Fruit Marketplace".text.italic.xl2.make(),
+          ],
+        ),
     );
   }
 

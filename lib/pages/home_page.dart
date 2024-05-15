@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/models/cart.dart';
 import 'package:flutter_application_1/models/catalog.dart';
 import 'package:flutter_application_1/pages/home_widgets/catalog_header.dart';
 import 'package:flutter_application_1/pages/home_widgets/catalog_image.dart';
 import 'package:flutter_application_1/utils/routes.dart';
-import 'package:flutter_application_1/widgets/drawer.dart';
+import 'package:flutter_application_1/utils/store.dart';
 import 'package:flutter_application_1/widgets/themes.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../widgets/item_widget.dart';
@@ -40,20 +41,33 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
+    final _cart = (VxState.store as MyStore).cart;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, MyRoutes.cartPageRoute),
-        backgroundColor: MyTheme.darkBluishColor,
-        child: Icon(Icons.shopping_cart,color: Colors.white),
+      floatingActionButton: VxBuilder(
+        mutations: {AddMutation,RemoveMutation},
+        builder : (context,store,status) {
+          return FloatingActionButton(
+            onPressed: () =>
+                Navigator.pushNamed(context, MyRoutes.cartPageRoute),
+            backgroundColor: MyTheme.darkBluishColor,
+            child: Icon(Icons.shopping_cart, color: Colors.white)
+                .badge(
+                size: 13, color: Colors.redAccent, count: _cart.items.length),
+          );
+        }
       ),
       body: SafeArea(
         child: Container(
+          padding: Vx.m32,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CatalogHeader(),
+              Row(
+                  children: [CatalogHeader()]
+              ),
+              10.heightBox,
               if (CatalogueModel.items != null && CatalogueModel.items.isNotEmpty)
-                CatalogList().py16().expand()
+                CatalogList().pLTRB(0, 30, 0, 16).expand()
               else
                 CircularProgressIndicator().centered().expand(),
             ],

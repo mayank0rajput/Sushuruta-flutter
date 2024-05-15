@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         primaryTextTheme: GoogleFonts.latoTextTheme(),
         brightness: Brightness.dark
       ),
-      initialRoute: "/login",
+      initialRoute: "/home",
       routes: {
         MyRoutes.loginRoute : (context) => LoginPage(),
         MyRoutes.homeRoute:(context) => HomePage(),
