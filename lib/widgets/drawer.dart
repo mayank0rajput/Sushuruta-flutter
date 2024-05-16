@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/routes.dart';
+import 'package:flutter_application_1/widgets/themes.dart';
 
 class MyDrawer extends StatelessWidget {
-  final imageUrl = "https://media.licdn.com/dms/image/D4D03AQGsEbXxXxVNNQ/profile-displayphoto-shrink_400_400/0/1696321647132?e=1718841600&v=beta&t=DkCtD6T6xDWW6erd29eHbZq7X0R8iRgLPH8OsV-Rva8";
   Widget build(BuildContext context){
     return Drawer(
       child: ListView(
@@ -12,27 +13,33 @@ class MyDrawer extends StatelessWidget {
             padding: EdgeInsets.zero,
               child: UserAccountsDrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.deepPurpleAccent
+                  color: Colors.indigo
                 ),
                 margin: EdgeInsets.zero,
-                accountName: Text("Mayank"),
+                accountName: Text("Guest User"),
                 accountEmail: Text("abc@gmail.com"),
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: NetworkImage(imageUrl),
-                ),
               ),
           ),
           ListTile(
             leading: Icon(Icons.home),
             title: Text("Home"),
+            onTap: (){
+              Navigator.pushNamed(context, MyRoutes.homeRoute);
+            },
           ),
           ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text("Profile"),
+            leading: Icon(Icons.shopping_cart),
+            title: Text("Cart"),
+            onTap: (){
+              Navigator.pushNamed(context, MyRoutes.cartPageRoute);
+            },
           ),
           ListTile(
-            leading: Icon(Icons.mail),
-            title: Text("Mail"),
+            leading: Icon(Icons.info_outline),
+            title: Text("About"),
+            onTap: (){
+              Navigator.pushNamed(context, MyRoutes.aboutPageRoute);
+            },
           )
         ],
       ),

@@ -10,7 +10,6 @@ class CatalogHeader extends StatelessWidget{
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            "Sushuruta".text.xl5.bold.color(MyTheme.darkBluishColor).make(),
             "Premium Dry Fruit Marketplace".text.italic.xl2.make(),
           ],
         ),

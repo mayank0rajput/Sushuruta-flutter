@@ -9,7 +9,9 @@ import 'package:flutter_application_1/pages/home_widgets/catalog_header.dart';
 import 'package:flutter_application_1/pages/home_widgets/catalog_image.dart';
 import 'package:flutter_application_1/utils/routes.dart';
 import 'package:flutter_application_1/utils/store.dart';
+import 'package:flutter_application_1/widgets/drawer.dart';
 import 'package:flutter_application_1/widgets/themes.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../widgets/item_widget.dart';
 import 'home_widgets/catalog_list.dart';
@@ -20,10 +22,6 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage> {
-  final int days = 30;
-
-  final String name = "Codepur";
-
   @override
   void initState(){
     super.initState();
@@ -55,6 +53,20 @@ class _HomePageState extends State<HomePage> {
                 size: 13, color: Colors.redAccent, count: _cart.items.length),
           );
         }
+      ),
+      drawer: MyDrawer(),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: MyTheme.darkBluishColor,
+        title: Material(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              "Sushuruta".text.xl5.bold.color(MyTheme.darkBluishColor).make(),
+            ],
+          )
+        ),
       ),
       body: SafeArea(
         child: Container(
