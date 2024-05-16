@@ -13,7 +13,7 @@ class MyDrawer extends StatelessWidget {
             padding: EdgeInsets.zero,
               child: UserAccountsDrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.indigo
+                  color: MyTheme.primaryGrey
                 ),
                 margin: EdgeInsets.zero,
                 accountName: Text("Guest User"),
@@ -21,8 +21,19 @@ class MyDrawer extends StatelessWidget {
               ),
           ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text("Home"),
+            leading: Icon(
+              Icons.home,
+              color: (ModalRoute.of(context)?.settings.name=="/home")
+                  ?MyTheme.primaryGreen:Drawer().surfaceTintColor
+            ),
+            title: Text("Home",
+              style: TextStyle(
+                  color: (
+                      (ModalRoute.of(context)?.settings.name=="/home")
+                          ?MyTheme.primaryGreen:Drawer().surfaceTintColor
+                  )
+              )
+            ),
             onTap: (){
               Navigator.pushNamed(context, MyRoutes.homeRoute);
             },
@@ -35,8 +46,15 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.info_outline),
-            title: Text("About"),
+            leading: Icon(Icons.info_outline,
+              color: (ModalRoute.of(context)?.settings.name=="/about")
+                  ?MyTheme.primaryGreen:Drawer().surfaceTintColor,
+            ),
+            title: Text("About",
+            style: TextStyle(
+              color: (ModalRoute.of(context)?.settings.name=="/about")
+                  ?MyTheme.primaryGreen:Drawer().surfaceTintColor
+            ),),
             onTap: (){
               Navigator.pushNamed(context, MyRoutes.aboutPageRoute);
             },
@@ -45,4 +63,5 @@ class MyDrawer extends StatelessWidget {
       ),
     );
   }
+
 }

@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.system,
       darkTheme: ThemeData(
         fontFamily: GoogleFonts.poppins().fontFamily,
         primaryTextTheme: GoogleFonts.latoTextTheme(),

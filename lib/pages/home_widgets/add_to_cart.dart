@@ -27,7 +27,7 @@ class AddToCart extends StatelessWidget {
           }
         },
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(MyTheme.darkBluishColor),
+          backgroundColor: MaterialStateProperty.all(MyTheme.primaryGreen),
           shape: MaterialStateProperty.all(
             StadiumBorder(),
           )),

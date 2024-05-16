@@ -41,13 +41,14 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final _cart = (VxState.store as MyStore).cart;
     return Scaffold(
+      backgroundColor: context.canvasColor,
       floatingActionButton: VxBuilder(
         mutations: {AddMutation,RemoveMutation},
         builder : (context,store,status) {
           return FloatingActionButton(
             onPressed: () =>
                 Navigator.pushNamed(context, MyRoutes.cartPageRoute),
-            backgroundColor: MyTheme.darkBluishColor,
+            backgroundColor: MyTheme.primaryGreen,
             child: Icon(Icons.shopping_cart, color: Colors.white)
                 .badge(
                 size: 13, color: Colors.redAccent, count: _cart.items.length),
@@ -56,27 +57,28 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: MyDrawer(),
       appBar: AppBar(
-        elevation: 0,
         backgroundColor: Colors.white,
-        foregroundColor: MyTheme.darkBluishColor,
+        scrolledUnderElevation: 0,
+        foregroundColor: MyTheme.black,
         title: Material(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              "Sushuruta".text.xl5.bold.color(MyTheme.darkBluishColor).make(),
-            ],
-          )
+            color: context.cardColor,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                "Sushuruta".text.xl5.bold.make(),
+              ],
+            )
+          ),
         ),
-      ),
       body: SafeArea(
         child: Container(
           padding: Vx.m32,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                  children: [CatalogHeader()]
-              ),
+              // Row(
+              //     children: [CatalogHeader()]
+              // ),
               10.heightBox,
               if (CatalogueModel.items != null && CatalogueModel.items.isNotEmpty)
                 CatalogList().pLTRB(0, 30, 0, 16).expand()

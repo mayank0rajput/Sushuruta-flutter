@@ -37,14 +37,14 @@ class _CartTotal extends StatelessWidget{
           VxBuilder(
             mutations: {RemoveMutation},
             builder: (context,store,status){
-              return "\$${_cart.totalPrice}"
+              return "₹${_cart.totalPrice}"
                   .text.xl4.make();},
              ),
           30.widthBox,
           ElevatedButton(
               style: ButtonStyle(
                   backgroundColor:
-                  MaterialStateProperty.all(MyTheme.darkBluishColor)),
+                  MaterialStateProperty.all(MyTheme.primaryGreen)),
               onPressed: (){
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: "Buying not supported yet.".text.make(),
