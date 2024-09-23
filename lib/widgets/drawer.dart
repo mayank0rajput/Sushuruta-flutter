@@ -39,6 +39,23 @@ class MyDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: Icon(Icons.chat,
+              color: (ModalRoute.of(context)?.settings.name=="/chat")
+              ?MyTheme.primaryGreen:Drawer().surfaceTintColor,
+            ),
+            title: Text("Chat",
+                style: TextStyle(
+                    color: (
+                        (ModalRoute.of(context)?.settings.name=="/chat")
+                            ?MyTheme.primaryGreen:Drawer().surfaceTintColor
+                    )
+                )
+            ),
+            onTap: (){
+              Navigator.pushNamed(context, MyRoutes.chatPageRoute);
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.shopping_cart),
             title: Text("Cart"),
             onTap: (){

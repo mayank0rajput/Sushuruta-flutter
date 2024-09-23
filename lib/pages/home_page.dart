@@ -11,6 +11,7 @@ import 'package:flutter_application_1/utils/routes.dart';
 import 'package:flutter_application_1/utils/store.dart';
 import 'package:flutter_application_1/widgets/drawer.dart';
 import 'package:flutter_application_1/widgets/themes.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../widgets/item_widget.dart';
@@ -66,22 +67,24 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 "Sushuruta".text.xl5.bold.make(),
+                // Text(dotenv.env['api']!),
               ],
             )
           ),
         ),
       body: SafeArea(
         child: Container(
-          padding: Vx.m32,
+          padding: EdgeInsets.zero,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Row(
-              //     children: [CatalogHeader()]
-              // ),
-              10.heightBox,
+              Row(
+                  children: [
+                    75.widthBox,
+                    CatalogHeader()]
+              ),
               if (CatalogueModel.items != null && CatalogueModel.items.isNotEmpty)
-                CatalogList().pLTRB(0, 30, 0, 16).expand()
+                CatalogList().pLTRB(0, 15, 0, 16).expand()
               else
                 CircularProgressIndicator().centered().expand(),
             ],
