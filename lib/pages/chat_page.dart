@@ -1,11 +1,14 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/routes.dart';
 import 'package:flutter_application_1/widgets/drawer.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/CartItem.dart';
+import '../models/cart.dart';
+import '../models/catalog.dart';
 import '../widgets/typing_indicator.dart';
 
 class ChatsPage extends StatefulWidget {
@@ -14,10 +17,12 @@ class ChatsPage extends StatefulWidget {
 }
 
 class _ChatsPageState extends State<ChatsPage> {
-  final List<ChatMessage> _messages = [ ];
+  final List<ChatMessage> _messages = [];
   var _isSomeoneTyping = false;
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  late var data;
+  late List<CartItem> items;
 
   @override
   void initState() {
@@ -86,15 +91,80 @@ class _ChatsPageState extends State<ChatsPage> {
     controller.clear(); // Clear input field
 
     // Fetch response from API
-    final data = await fetchData(message);
+    data = await fetchData(message);
     if (data != null && data.isNotEmpty) {
-      setState(() {
-        _isSomeoneTyping = false;
-        _messages.add(ChatMessage(sender: 'Assistant', text: data[0], isSender: false));
-      });
+      if (data[1] == "end") {
+        showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                  title: const Text('CONFIRM ORDER'),
+                  content:
+                      const Text('Are you sure you want to confirm order?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        confirmOrder(data[0]);
+                        // Navigator.pushNamed(context, MyRoutes.cartPageRoute);
+                        Navigator.pop(context,'OK');
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ));
+      } else {
+        setState(() {
+          _isSomeoneTyping = false;
+          _messages.add(
+              ChatMessage(sender: 'Assistant', text: data[0], isSender: false));
+        });
+      }
     }
-
     _scrollToBottom();
+  }
+
+  Future<void> confirmOrder(String req) async {
+    try {
+      final BASE = await dotenv.env['SERVER'];
+      var url = "${BASE}/api/confirm";
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({"orderStatement": req}),
+      );
+      if (response.statusCode == 200) {
+        final resBody = jsonDecode(response.body);
+        var apiItems = resBody["items"];
+        items = List.from(apiItems)
+            .map<CartItem>((item) => CartItem.fromJson(item))
+            .toList();
+        items.forEach((element) async {
+          await AddMutation(CatalogueModel().getById(element.itemId), q: element.quantity);
+        });
+        await showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text('ORDER CONFIRMED'),
+              // content: const Text('Are you sure you want to confirm order?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context,'OK');
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
+        Navigator.pushNamed(context, MyRoutes.cartPageRoute);
+      } else {
+        print('Error while confirming : ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
   }
 
   @override
@@ -102,8 +172,8 @@ class _ChatsPageState extends State<ChatsPage> {
     return Scaffold(
       drawer: MyDrawer(),
       appBar: AppBar(
-        title: Row(
-          children: const [
+        title: const Row(
+          children: [
             Text('Assistant'),
           ],
         ),
@@ -120,7 +190,8 @@ class _ChatsPageState extends State<ChatsPage> {
               reverse: true,
               itemCount: _messages.length,
               itemBuilder: (context, index) {
-                return ChatMessageBubble(message: _messages[_messages.length - 1 - index]);
+                return ChatMessageBubble(
+                    message: _messages[_messages.length - 1 - index]);
               },
             ),
           ),
@@ -142,7 +213,7 @@ class _ChatsPageState extends State<ChatsPage> {
       decoration: BoxDecoration(color: Colors.grey[200]),
       child: Row(
         children: [
-          IconButton(icon: const Icon(Icons.emoji_emotions), onPressed: () {}),
+          // IconButton(icon: const Icon(Icons.emoji_emotions), onPressed: () {}),
           Expanded(
             child: TextField(
               controller: controller,
@@ -152,8 +223,8 @@ class _ChatsPageState extends State<ChatsPage> {
               ),
             ),
           ),
-          IconButton(icon: const Icon(Icons.camera_alt), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.mic), onPressed: () {}),
+          // IconButton(icon: const Icon(Icons.camera_alt), onPressed: () {}),
+          // IconButton(icon: const Icon(Icons.mic), onPressed: () {}),
           IconButton(
             icon: const Icon(Icons.send),
             onPressed: _sendMessage,
@@ -188,9 +259,11 @@ class ChatMessageBubble extends StatelessWidget {
             ),
           ),
           child: Column(
-            crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment:
+                isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              Text(message.sender, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(message.sender,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 5),
               Text(message.text),
             ],
@@ -201,11 +274,11 @@ class ChatMessageBubble extends StatelessWidget {
   }
 }
 
-
 class ChatMessage {
   final String sender;
   final String text;
   final bool isSender;
 
-  ChatMessage({required this.sender, required this.text, required this.isSender});
+  ChatMessage(
+      {required this.sender, required this.text, required this.isSender});
 }

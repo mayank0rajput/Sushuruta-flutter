@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/cart.dart';
 import 'package:flutter_application_1/pages/about_page.dart';
 import 'package:flutter_application_1/pages/cart_page.dart';
 import 'package:flutter_application_1/pages/chat_page.dart';
@@ -8,8 +7,8 @@ import 'package:flutter_application_1/pages/login_page.dart';
 import 'package:flutter_application_1/utils/routes.dart';
 import 'package:flutter_application_1/utils/store.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:velocity_x/velocity_x.dart';
+
 Future<void> main() async {
   await dotenv.load(fileName: '.env');
   runApp(VxState(store: MyStore(), child: MyApp()));

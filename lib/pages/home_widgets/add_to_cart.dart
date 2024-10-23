@@ -9,7 +9,7 @@ import '../../models/cart.dart';
 
 class AddToCart extends StatelessWidget {
 
-  final Item catalogItem;
+  final Product catalogItem;
   AddToCart(
       {Key? key,
         required this.catalogItem

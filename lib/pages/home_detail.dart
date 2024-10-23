@@ -7,7 +7,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'home_widgets/add_to_cart.dart';
 
 class HomeDetailPage extends StatelessWidget {
-  final Item catalog;
+  final Product catalog;
   const HomeDetailPage({Key? key,required this.catalog}) :
         assert (catalog != null),
         super(key: key);
@@ -29,10 +29,10 @@ class HomeDetailPage extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            catalog.name.text.xl4.color(Color(catalog.color.hashCode)).bold.make(),
+            catalog.name.text.xl4.color(Colors.redAccent).bold.make(),
             Hero(
               tag: Key(catalog.id.toString()),
-                child: Image.asset(catalog.image.toString())
+                child: Image.network('https://sushuruta-backend.onrender.com${catalog.image}')
             ).h32(context),
             Expanded(
               child: VxArc(

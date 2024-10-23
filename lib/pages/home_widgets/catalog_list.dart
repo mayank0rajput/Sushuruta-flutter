@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/catalog.dart';
 import 'package:flutter_application_1/pages/home_detail.dart';
 import 'package:flutter_application_1/pages/home_widgets/add_to_cart.dart';
-// import 'package:flutter_application_1/pages/home_detail_page.dart';
 import 'package:flutter_application_1/widgets/themes.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -29,7 +28,7 @@ class CatalogList extends StatelessWidget {
       ):
       GridView.builder(
           itemCount: CatalogueModel.items.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 50,
               mainAxisSpacing: 50,
@@ -50,7 +49,7 @@ class CatalogList extends StatelessWidget {
 }
 
 class CatalogItem extends StatelessWidget {
-  final Item catalogItem;
+  final Product catalogItem;
 
   const CatalogItem({Key? key, required this.catalogItem})
       : assert(catalogItem != null),
@@ -78,7 +77,7 @@ class CatalogItem extends StatelessWidget {
             alignment: MainAxisAlignment.spaceBetween,
             buttonPadding: EdgeInsets.zero,
             children: [
-              "₹${catalogItem.price}".text.bold.xl.make(),
+              "${catalogItem.price}".text.bold.xl.make(),
               AddToCart(catalogItem: catalogItem).pLTRB(15,0,0,0)
             ],
           ).pOnly(right: 8.0)

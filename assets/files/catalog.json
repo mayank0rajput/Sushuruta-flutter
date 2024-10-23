@@ -2,51 +2,67 @@
     "products": [
         {
             "id": 1,
-            "name": "Anjeer",
-            "desc": "Dried Figs",
-            "price": 700,
-            "color": "#964B00",
-            "image": "assets/images/anjeer.png"
+            "name": "Kishmish / Raisen",
+            "variety": "Popular (250 gm)",
+            "size": "250 gm",
+            "price": "₹120",
+            "image": "/assets/images/kishmish.png"
         },
         {
             "id": 2,
-            "name": "Dal Chini",
-            "desc": "Cinnamon",
-            "price": 300,
-            "color": "#00ac51",
-            "image": "assets/images/dalchini.png"
+            "name": "Kishmish / Raisen",
+            "variety": "Popular (500 gm)",
+            "size": "500 gm",
+            "price": "₹250",
+            "image": "/assets/images/kishmish.png"
         },
         {
             "id": 3,
-            "name": "Kali Kishmish",
-            "desc": "Blackcurrant",
-            "price": 300,
-            "color": "#e0bfae",
-            "image": "assets/images/blackraisin.png"
+            "name": "Kishmish / Raisen",
+            "variety": "Premium",
+            "size": "250 gm",
+            "price": "₹380",
+            "image": "/assets/images/kishmish.png"
         },
         {
             "id": 4,
-            "name": "Kandhari Kishmish",
-            "desc": "Golden Raisins",
-            "price": 350,
-            "color": "#544ee4",
-            "image": "assets/images/kishmish.png"
+            "name": "Khumani",
+            "variety": "Premium",
+            "size": "500 gm",
+            "price": "₹280",
+            "image": "/assets/images/khumani.png"
         },
         {
             "id": 5,
-            "name": "Khumani",
-            "desc": "Dried Apricot",
-            "price": 350,
-            "color": "#e3e4e9",
-            "image": "assets/images/khumani.png"
+            "name": "Kali Kishmish",
+            "variety": "Premium",
+            "size": "500 gm",
+            "price": "₹320",
+            "image": "/assets/images/blackraisin.png"
         },
         {
             "id": 6,
-            "name": "Munakka",
-            "desc": "Grape Raisins",
-            "price": 700,
-            "color": "#f73984",
-            "image": "assets/images/munakka.png"
+            "name": "Munnaca -v1",
+            "variety": "Premium",
+            "size": "500 gm",
+            "price": "₹320",
+            "image": "/assets/images/munakka.png"
+        },
+        {
+            "id": 7,
+            "name": "Munnaca -v3",
+            "variety": "Premium",
+            "size": "500 gm",
+            "price": "₹350",
+            "image": "/assets/images/munakka.png"
+        },
+        {
+            "id": 8,
+            "name": "Anjeer",
+            "variety": "Premium",
+            "size": "250 gm",
+            "price": "₹350",
+            "image": "/assets/images/anjeer.png"
         }
     ]
 }

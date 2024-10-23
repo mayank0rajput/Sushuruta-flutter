@@ -6,25 +6,21 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_1/models/cart.dart';
 import 'package:flutter_application_1/models/catalog.dart';
 import 'package:flutter_application_1/pages/home_widgets/catalog_header.dart';
-import 'package:flutter_application_1/pages/home_widgets/catalog_image.dart';
 import 'package:flutter_application_1/utils/routes.dart';
 import 'package:flutter_application_1/utils/store.dart';
 import 'package:flutter_application_1/widgets/drawer.dart';
 import 'package:flutter_application_1/widgets/themes.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:velocity_x/velocity_x.dart';
-import '../widgets/item_widget.dart';
 import 'home_widgets/catalog_list.dart';
 
-class HomePage extends StatefulWidget{
+class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
     loadData();
   }
@@ -34,7 +30,7 @@ class _HomePageState extends State<HomePage> {
      var decodedData = jsonDecode(catalog);
      var productData = decodedData["products"];
      CatalogueModel.items = List.from(productData)
-         .map<Item>((item) => Item.fromMap(item))
+         .map<Product>((item) => Product.fromMap(item))
          .toList();
      setState(() { });
   }
@@ -42,55 +38,49 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final _cart = (VxState.store as MyStore).cart;
     return Scaffold(
-      backgroundColor: context.canvasColor,
-      floatingActionButton: VxBuilder(
-        mutations: {AddMutation,RemoveMutation},
-        builder : (context,store,status) {
-          return FloatingActionButton(
-            onPressed: () =>
-                Navigator.pushNamed(context, MyRoutes.cartPageRoute),
-            backgroundColor: MyTheme.primaryGreen,
-            child: Icon(Icons.shopping_cart, color: Colors.white)
-                .badge(
-                size: 13, color: Colors.redAccent, count: _cart.items.length),
-          );
-        }
-      ),
-      drawer: MyDrawer(),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        scrolledUnderElevation: 0,
-        foregroundColor: MyTheme.black,
-        title: Material(
-            color: context.cardColor,
-            child: Row(
+        backgroundColor: context.canvasColor,
+        floatingActionButton: VxBuilder(
+            mutations: {AddMutation, RemoveMutation},
+            builder: (context, store, status) {
+              return FloatingActionButton(
+                onPressed: () =>
+                    Navigator.pushNamed(context, MyRoutes.cartPageRoute),
+                backgroundColor: MyTheme.primaryGreen,
+                child: Icon(Icons.shopping_cart, color: Colors.white).badge(
+                    size: 13,
+                    color: Colors.redAccent,
+                    count: _cart.items.length),
+              );
+            }),
+        drawer: MyDrawer(),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          scrolledUnderElevation: 0,
+          foregroundColor: MyTheme.black,
+          title: Material(
+              color: context.cardColor,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  "Sushuruta".text.xl5.bold.make(),
+                ],
+              )),
+        ),
+        body: SafeArea(
+          child: Container(
+            padding: EdgeInsets.zero,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                "Sushuruta".text.xl5.bold.make(),
-                // Text(dotenv.env['api']!),
+                Row(children: [75.widthBox, CatalogHeader()]),
+                if (CatalogueModel.items != null &&
+                    CatalogueModel.items.isNotEmpty)
+                  CatalogList().pLTRB(0, 15, 0, 16).expand()
+                else
+                  CircularProgressIndicator().centered().expand(),
               ],
-            )
+            ),
           ),
-        ),
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.zero,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                  children: [
-                    75.widthBox,
-                    CatalogHeader()]
-              ),
-              if (CatalogueModel.items != null && CatalogueModel.items.isNotEmpty)
-                CatalogList().pLTRB(0, 15, 0, 16).expand()
-              else
-                CircularProgressIndicator().centered().expand(),
-            ],
-          ),
-        ),
-      )
-    );
+        ));
   }
 }
