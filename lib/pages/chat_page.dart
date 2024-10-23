@@ -128,8 +128,8 @@ class _ChatsPageState extends State<ChatsPage> {
 
   Future<void> confirmOrder(String req) async {
     try {
-      final BASE = await dotenv.env['SERVER'];
-      var url = "${BASE}/api/confirm";
+      final BASE = await dotenv.env['CONFIRM_API'];
+      var url = BASE.toString();
       final response = await http.post(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
