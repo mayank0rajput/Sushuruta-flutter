@@ -210,24 +210,33 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget _buildInputSection() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(color: Colors.grey[200]),
+      decoration: BoxDecoration(color: Colors.white),
       child: Row(
         children: [
-          // IconButton(icon: const Icon(Icons.emoji_emotions), onPressed: () {}),
           Expanded(
             child: TextField(
+              maxLines: null,
+              minLines: 1,
               controller: controller,
-              decoration: const InputDecoration(
-                hintText: 'Message Assistant',
-                border: InputBorder.none,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: _sendMessage,
+                ),
+                contentPadding:
+                EdgeInsets.symmetric(vertical: 10, horizontal: 15.0),
+                hintText: 'Say Hii',
+                hoverColor: Colors.amberAccent,
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 2),
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54, width: 2),
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
               ),
             ),
-          ),
-          // IconButton(icon: const Icon(Icons.camera_alt), onPressed: () {}),
-          // IconButton(icon: const Icon(Icons.mic), onPressed: () {}),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: _sendMessage,
           ),
         ],
       ),
