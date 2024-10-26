@@ -170,16 +170,18 @@ class _ChatsPageState extends State<ChatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
+      drawer: MyDrawer()  ,
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           children: [
-            Text('Assistant'),
+            // IconButton(
+            //     onPressed: () {
+            //       Navigator.of(context).pop();
+            //     },
+            //     icon: Icon(Icons.arrow_back)),
+            Expanded(child: Center(child: Text('Assistant'))),
           ],
         ),
-        actions: [
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
-        ],
       ),
       body: Column(
         children: [
@@ -217,6 +219,9 @@ class _ChatsPageState extends State<ChatsPage> {
             child: TextField(
               maxLines: null,
               minLines: 1,
+              onSubmitted: (text){
+                _sendMessage;
+              },
               controller: controller,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
@@ -227,13 +232,13 @@ class _ChatsPageState extends State<ChatsPage> {
                 EdgeInsets.symmetric(vertical: 10, horizontal: 15.0),
                 hintText: 'Say Hii',
                 hoverColor: Colors.amberAccent,
-                enabledBorder: OutlineInputBorder(
+                enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey, width: 2),
                     borderRadius: BorderRadius.all(Radius.circular(30))),
-                focusedBorder: OutlineInputBorder(
+                focusedBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black54, width: 2),
                     borderRadius: BorderRadius.all(Radius.circular(30))),
-                border: OutlineInputBorder(
+                border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(30))),
               ),
             ),
@@ -259,22 +264,27 @@ class ChatMessageBubble extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           decoration: BoxDecoration(
-            color: isSender ? Colors.blue[200] : Colors.grey[200],
+            color: isSender ? Colors.blueAccent : Colors.grey[300],
             borderRadius: BorderRadius.only(
-              topLeft: isSender ? const Radius.circular(10) : Radius.zero,
-              topRight: isSender ? Radius.zero : const Radius.circular(10),
-              bottomLeft: const Radius.circular(10),
-              bottomRight: const Radius.circular(10),
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomLeft: isSender ? Radius.circular(12) : Radius.circular(0),
+              bottomRight: isSender ? Radius.circular(0) : Radius.circular(12),
             ),
           ),
           child: Column(
             crossAxisAlignment:
-                isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Text(message.sender,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: isSender ? Colors.white : Colors.black)),
               const SizedBox(height: 5),
-              Text(message.text),
+              Text(
+                message.text,
+                style: TextStyle(color: isSender ? Colors.white : Colors.black),
+              ),
             ],
           ),
         ),

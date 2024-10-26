@@ -1,14 +1,15 @@
+import 'package:flutter/material.dart';
 import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 
 class TypingIndicator extends StatefulWidget {
   const TypingIndicator({
     super.key,
     this.showIndicator = false,
-    this.bubbleColor = const Color(0xFF646b7f),
-    this.flashingCircleDarkColor = const Color(0xFF333333),
-    this.flashingCircleBrightColor = const Color(0xFFaec1dd),
+    this.bubbleColor =
+    const Color(0xFFE5E5EA), // Light gray (receiver's bubble)
+    this.flashingCircleDarkColor = const Color(0xFFF), // Darker gray for dots
+    this.flashingCircleBrightColor =
+        Colors.grey, // Bright white for flashing dots
   });
 
   final bool showIndicator;
@@ -23,14 +24,8 @@ class TypingIndicator extends StatefulWidget {
 class _TypingIndicatorState extends State<TypingIndicator>
     with TickerProviderStateMixin {
   late AnimationController _appearanceController;
-
-  late Animation<double> _indicatorSpaceAnimation;
-
-  late Animation<double> _smallBubbleAnimation;
-  late Animation<double> _mediumBubbleAnimation;
-  late Animation<double> _largeBubbleAnimation;
-
   late AnimationController _repeatingController;
+
   final List<Interval> _dotIntervals = const [
     Interval(0.25, 0.8),
     Interval(0.35, 0.9),
@@ -43,33 +38,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
 
     _appearanceController = AnimationController(
       vsync: this,
-    )..addListener(() {
-      setState(() {});
-    });
-
-    _indicatorSpaceAnimation = CurvedAnimation(
-      parent: _appearanceController,
-      curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
-      reverseCurve: const Interval(0.0, 1.0, curve: Curves.easeOut),
-    ).drive(Tween<double>(
-      begin: 0.0,
-      end: 60.0,
-    ));
-
-    _smallBubbleAnimation = CurvedAnimation(
-      parent: _appearanceController,
-      curve: const Interval(0.0, 0.5, curve: Curves.elasticOut),
-      reverseCurve: const Interval(0.0, 0.3, curve: Curves.easeOut),
-    );
-    _mediumBubbleAnimation = CurvedAnimation(
-      parent: _appearanceController,
-      curve: const Interval(0.2, 0.7, curve: Curves.elasticOut),
-      reverseCurve: const Interval(0.2, 0.6, curve: Curves.easeOut),
-    );
-    _largeBubbleAnimation = CurvedAnimation(
-      parent: _appearanceController,
-      curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
-      reverseCurve: const Interval(0.5, 1.0, curve: Curves.easeOut),
+      duration: const Duration(milliseconds: 300),
     );
 
     _repeatingController = AnimationController(
@@ -103,175 +72,72 @@ class _TypingIndicatorState extends State<TypingIndicator>
   }
 
   void _showIndicator() {
-    _appearanceController
-      ..duration = const Duration(milliseconds: 750)
-      ..forward();
+    _appearanceController.forward();
     _repeatingController.repeat();
   }
 
   void _hideIndicator() {
-    _appearanceController
-      ..duration = const Duration(milliseconds: 150)
-      ..reverse();
+    _appearanceController.reverse();
     _repeatingController.stop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _indicatorSpaceAnimation,
-      builder: (context, child) {
-        return SizedBox(
-          height: _indicatorSpaceAnimation.value,
-          child: child,
-        );
-      },
-      child: Stack(
-        children: [
-          AnimatedBubble(
-            animation: _smallBubbleAnimation,
-            left: 8,
-            bottom: 8,
-            bubble: CircleBubble(
-              size: 8,
-              bubbleColor: widget.bubbleColor,
-            ),
-          ),
-          AnimatedBubble(
-            animation: _mediumBubbleAnimation,
-            left: 10,
-            bottom: 10,
-            bubble: CircleBubble(
-              size: 16,
-              bubbleColor: widget.bubbleColor,
-            ),
-          ),
-          AnimatedBubble(
-            animation: _largeBubbleAnimation,
-            left: 12,
-            bottom: 12,
-            bubble: StatusBubble(
-              repeatingController: _repeatingController,
-              dotIntervals: _dotIntervals,
-              flashingCircleDarkColor: widget.flashingCircleDarkColor,
-              flashingCircleBrightColor: widget.flashingCircleBrightColor,
-              bubbleColor: widget.bubbleColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CircleBubble extends StatelessWidget {
-  const CircleBubble({
-    super.key,
-    required this.size,
-    required this.bubbleColor,
-  });
-
-  final double size;
-  final Color bubbleColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: bubbleColor,
-      ),
-    );
-  }
-}
-
-class AnimatedBubble extends StatelessWidget {
-  const AnimatedBubble({
-    super.key,
-    required this.animation,
-    required this.left,
-    required this.bottom,
-    required this.bubble,
-  });
-
-  final Animation<double> animation;
-  final double left;
-  final double bottom;
-  final Widget bubble;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: left,
-      bottom: bottom,
+    return Padding(
+      padding: EdgeInsets.fromLTRB(8, 0, 0, 5),
       child: AnimatedBuilder(
-        animation: animation,
+        animation: _appearanceController,
         builder: (context, child) {
-          return Transform.scale(
-            scale: animation.value,
-            alignment: Alignment.bottomLeft,
+          return Opacity(
+            opacity: widget.showIndicator ? 1.0 : 0.0,
             child: child,
           );
         },
-        child: bubble,
-      ),
-    );
-  }
-}
-
-class StatusBubble extends StatelessWidget {
-  const StatusBubble({
-    super.key,
-    required this.repeatingController,
-    required this.dotIntervals,
-    required this.flashingCircleBrightColor,
-    required this.flashingCircleDarkColor,
-    required this.bubbleColor,
-  });
-
-  final AnimationController repeatingController;
-  final List<Interval> dotIntervals;
-  final Color flashingCircleDarkColor;
-  final Color flashingCircleBrightColor;
-  final Color bubbleColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 85,
-      height: 44,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(27),
-        color: bubbleColor,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          FlashingCircle(
-            index: 0,
-            repeatingController: repeatingController,
-            dotIntervals: dotIntervals,
-            flashingCircleDarkColor: flashingCircleDarkColor,
-            flashingCircleBrightColor: flashingCircleBrightColor,
-          ),
-          FlashingCircle(
-            index: 1,
-            repeatingController: repeatingController,
-            dotIntervals: dotIntervals,
-            flashingCircleDarkColor: flashingCircleDarkColor,
-            flashingCircleBrightColor: flashingCircleBrightColor,
-          ),
-          FlashingCircle(
-            index: 2,
-            repeatingController: repeatingController,
-            dotIntervals: dotIntervals,
-            flashingCircleDarkColor: flashingCircleDarkColor,
-            flashingCircleBrightColor: flashingCircleBrightColor,
-          ),
-        ],
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: 75, // Similar to iMessage bubble
+              height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(5), // Left bottom corner rounded
+                ),
+                color: widget.bubbleColor, // Receiver's chat bubble color
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FlashingCircle(
+                    index: 0,
+                    repeatingController: _repeatingController,
+                    dotIntervals: _dotIntervals,
+                    flashingCircleDarkColor: widget.flashingCircleDarkColor,
+                    flashingCircleBrightColor: widget.flashingCircleBrightColor,
+                  ),
+                  FlashingCircle(
+                    index: 1,
+                    repeatingController: _repeatingController,
+                    dotIntervals: _dotIntervals,
+                    flashingCircleDarkColor: widget.flashingCircleDarkColor,
+                    flashingCircleBrightColor: widget.flashingCircleBrightColor,
+                  ),
+                  FlashingCircle(
+                    index: 2,
+                    repeatingController: _repeatingController,
+                    dotIntervals: _dotIntervals,
+                    flashingCircleDarkColor: widget.flashingCircleDarkColor,
+                    flashingCircleBrightColor: widget.flashingCircleBrightColor,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -304,8 +170,8 @@ class FlashingCircle extends StatelessWidget {
         final circleColorPercent = sin(pi * circleFlashPercent);
 
         return Container(
-          width: 12,
-          height: 12,
+          width: 10, // Small dot size for iMessage-style bubbles
+          height: 10,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Color.lerp(
