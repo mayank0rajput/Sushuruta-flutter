@@ -170,18 +170,10 @@ class _ChatsPageState extends State<ChatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer()  ,
+      drawer: MyDrawer(),
       appBar: AppBar(
-        title: Row(
-          children: [
-            // IconButton(
-            //     onPressed: () {
-            //       Navigator.of(context).pop();
-            //     },
-            //     icon: Icon(Icons.arrow_back)),
-            Expanded(child: Center(child: Text('Assistant'))),
-          ],
-        ),
+        centerTitle: true,
+        title: Text('Assistant')
       ),
       body: Column(
         children: [
@@ -258,7 +250,8 @@ class ChatMessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSender = message.isSender;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: isSender ? EdgeInsets.fromLTRB(20, 2.5, 0, 2.5) : EdgeInsets.fromLTRB(0, 2.5, 20, 2.5),
+      // padding: const EdgeInsets.symmetric(vertical: 5),
       child: Align(
         alignment: isSender ? Alignment.bottomRight : Alignment.bottomLeft,
         child: Container(

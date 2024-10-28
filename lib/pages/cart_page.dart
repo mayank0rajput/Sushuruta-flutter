@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1/pages/home_widgets/catalog_image.dart';
 import 'package:flutter_application_1/widgets/themes.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -15,6 +17,8 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
         title: "Cart".text.make(),
       ),
       body: Column(
@@ -29,7 +33,7 @@ class _CartTotal extends StatelessWidget {
   Widget build(BuildContext context) {
     final Cart _cart = (VxState.store as MyStore).cart;
     return SizedBox(
-      height: 200,
+      height: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -59,6 +63,8 @@ class _CartTotal extends StatelessWidget {
 class _CartList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var temp = new CatalogueModel(); // for debugging
+    AddMutation(temp.getById(2)); // for debugging
     VxState.watch(context, on: [RemoveMutation]);
     final Cart _cart = (VxState.store as MyStore).cart;
     return _cart.items.isEmpty
@@ -66,18 +72,39 @@ class _CartList extends StatelessWidget {
         : ListView.builder(
             itemCount: _cart.items?.length,
             itemBuilder: (context, index) => ListTile(
-              leading: Icon(Icons.done),
-              trailing: IconButton(
-                icon: Icon(Icons.remove_circle_outline),
-                onPressed: () {
-                  RemoveMutation(_cart.items[index]);
-                },
-              ),
               title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _cart.items[index].name.text.make(),
-                  SizedBox(width: 5,),
-                  Text("Quantity : ${_cart.getQuantity(_cart.items[index])}"),
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        height: 100,
+                          child: Image.asset(_cart.items[index].image.toString().substring(1)).box.make(),
+                      )
+                    ],
+                  ),
+                  SizedBox(width: 20,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _cart.items[index].name.text.make(),
+                      _cart.items[index].desc.text.make(),
+                    ],
+                  ),
+                  Spacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Quantity"),
+                      Row(
+                        children: [
+                          Text("${_cart.getQuantity(_cart.items[index])}"),
+                        ]
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
