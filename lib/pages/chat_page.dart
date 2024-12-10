@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/SharedPrefs.dart';
 import 'package:flutter_application_1/utils/routes.dart';
 import 'package:flutter_application_1/widgets/drawer.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,9 +24,11 @@ class _ChatsPageState extends State<ChatsPage> {
   final ScrollController _scrollController = ScrollController();
   late var data;
   late List<CartItem> items;
+  int credit= 0;
 
   @override
   void initState() {
+    load();
     super.initState();
     _scrollController.addListener(_scrollToBottom); // Add scroll listener
   }
@@ -81,6 +84,10 @@ class _ChatsPageState extends State<ChatsPage> {
 
   // Handles sending the user's message and fetching assistant's response
   Future<void> _sendMessage() async {
+    if (credit == 0){
+      showCreditDialog();
+      return;
+    }
     final message = controller.text.trim();
     if (message.isEmpty) return;
 
@@ -89,11 +96,13 @@ class _ChatsPageState extends State<ChatsPage> {
       _isSomeoneTyping = true;
     });
     controller.clear(); // Clear input field
-
+    await Profile.saveCredits(credit-1);
+    getCredit();
     // Fetch response from API
     data = await fetchData(message);
     if (data != null && data.isNotEmpty) {
       if (data[1] == "end") {
+        _isSomeoneTyping = false;
         showDialog<String>(
             context: context,
             builder: (BuildContext context) => AlertDialog(
@@ -167,13 +176,29 @@ class _ChatsPageState extends State<ChatsPage> {
     }
   }
 
+  Future<void> getCredit() async {
+    credit = await Profile.getCredits();
+  }
+
+  void load()async{
+    await getCredit();
+    setState(() {
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MyDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Assistant')
+        title: Text('Assistant'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: credit==null ?Text("Loading credits") : Text("Credits left : ${credit.toString()}"),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -199,6 +224,18 @@ class _ChatsPageState extends State<ChatsPage> {
         ],
       ),
     );
+  }
+
+  void showCreditDialog(){
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context)=> AlertDialog(
+          title: const Text("Credit Limit Exceed!"),
+          content: const Text("We are sorry but your credits for today are expired ."),
+          actions: [
+            TextButton(onPressed:()=> Navigator.pop(context,'ok'), child: Text('OK'))
+          ],
+        ));
   }
 
   Widget _buildInputSection() {

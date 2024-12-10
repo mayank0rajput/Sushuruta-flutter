@@ -1,6 +1,12 @@
+import 'dart:html';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/SharedPrefs.dart';
 import 'package:flutter_application_1/utils/routes.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget{
   @override
@@ -11,108 +17,115 @@ class _LoginPageState extends State<LoginPage> {
   bool changeButton = false;
   String name = "";
   void moveToHome(BuildContext context) async{
-    if(_formKey.currentState!.validate()){
-      setState(() {
-        changeButton = true;
-      });
-      await Future.delayed(Duration(seconds: 1));
-      await Navigator.pushNamed(context, MyRoutes.homeRoute);
-      setState(() {
-        changeButton = false;
-      });
+    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    GoogleSignInAuthentication? gooleAuth = await googleUser?.authentication;
+    AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: gooleAuth?.accessToken,
+      idToken: gooleAuth?.idToken
+    );
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+    User? user = userCredential.user;
+    if(user != null){
+      await Profile.saveUser(user.uid);
+      await Profile.saveGuest(false);
+      await Profile.saveName(user.displayName!);
+      await Profile.saveEmail(user.email!);
+      Profile.refreshCreditNewDay();
+      Navigator.pushReplacementNamed(context, MyRoutes.homeRoute);
     }
+  }
+
+  void signInAsGuest(BuildContext context) async{
+    UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
+    User? user = userCredential.user;
+    if(user != null){
+      await Profile.saveUser(user.uid);
+      await Profile.saveGuest(true);
+      Profile.refreshCreditNewDay();
+      Navigator.pushReplacementNamed(context, MyRoutes.homeRoute);
     }
-    final _formKey = GlobalKey<FormState>();
+  }
   Widget build(BuildContext context){
     return Material(
       color: Colors.white,
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Image.asset(
-                "assets/images/login_image.png",
-                fit: BoxFit.cover
-              ),
-              SizedBox(height: 10.0),
-              Text("Welcome $name",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black54,
-              ),
-              ),
-              SizedBox(height: 10.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 32),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Enter Username",
-                        labelText: "Username",
-                        hintStyle: TextStyle(color: Colors.black26),
-                      ),
-                      validator: (value) {
-                        if(value!.isEmpty){
-                          return "Username cannot be empty.d";
-                        }
-                        return null;
-                      },
-                      onChanged: (value){
-                        name = value;
-                        setState(() {
-                        });
-                      },
-                    ),
-                    TextFormField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "Enter Password",
-                        labelText: "Password",
-                        hintStyle: TextStyle(color: Colors.black26),
-                      ),
-                      validator: (value){
-                        if(value!.isEmpty){
-                          return "Password cannot be empty";
-                        }else if(value!.length<6){
-                          return "Password length should be atleast 6";
-                        }
-                        return null;
-                      },
-                    )
-                  ],
+      child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height*0.1,),
+                Image.asset(
+                  "assets/images/login_image.png",
+                  fit: BoxFit.contain,
+                  height: (MediaQuery.of(context).size.height * 0.4),
                 ),
-              ),
-              Material(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.circular(changeButton ? 50 : 8),
-                child: InkWell(
-                  onTap: () => moveToHome(context),
-                  child: AnimatedContainer(
-                      duration: Duration(seconds: 1),
-                      width: (changeButton ? 50 : 150),
-                      height: 50,
-                      alignment: Alignment.center,
-                      child: changeButton? Icon(
-                        Icons.done,
-                        color: Colors.white,
-                      ) : Text(
-                        "Login",
-                        style: TextStyle(
+                const Text("Glad to see you!" ,
+                    style:TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black54,
+                )),
+                SizedBox(height: MediaQuery.of(context).size.height*0.015,),
+                Material(
+                    color: Colors.deepPurple,
+                    borderRadius: BorderRadius.circular(changeButton ? 50 : 8),
+                  child: InkWell(
+                    onTap: () => moveToHome(context),
+                    child: AnimatedContainer(
+                        duration:const  Duration(seconds: 1),
+                        width: (changeButton ? 50 : 180),
+                        height: 40,
+                        alignment: Alignment.center,
+                        child: changeButton? const Icon(
+                          Icons.done,
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 19,
+                        ) : Text(
+                          "Login with Google ",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: GoogleFonts.roboto().fontFamily,
+                            fontSize: 19,
+                          ),
                         ),
-                      ),
-                    )
+                      )
+                  ),
                 ),
-              )
-            ],
+                SizedBox(height: MediaQuery.of(context).size.height*0.01,),
+                Text("OR",
+                  style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  fontFamily: GoogleFonts.roboto().fontFamily,
+                )
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height*0.01,),
+                Material(
+                  // color: Colors.deepPurple,
+                  // borderRadius: BorderRadius.circular(changeButton ? 50 : 8),
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                        onTap: () => signInAsGuest(context),
+                        child: Text(
+                          "Sign in as Guest",
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            fontFamily: GoogleFonts.roboto().fontFamily,
+                          ),
+                        ),
+                    ),
+                  ),
+                )
+
+              ],
+            ),
           ),
         ),
-      ),
     );
   }
 }

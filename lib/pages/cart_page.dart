@@ -63,8 +63,6 @@ class _CartTotal extends StatelessWidget {
 class _CartList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var temp = new CatalogueModel(); // for debugging
-    AddMutation(temp.getById(2)); // for debugging
     VxState.watch(context, on: [RemoveMutation]);
     final Cart _cart = (VxState.store as MyStore).cart;
     return _cart.items.isEmpty

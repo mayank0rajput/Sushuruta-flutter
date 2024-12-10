@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '758451723191',
     projectId: 'ecommerce-ef479',
     authDomain: 'ecommerce-ef479.firebaseapp.com',
-    storageBucket: 'ecommerce-ef479.appspot.com',
+    storageBucket: 'ecommerce-ef479.firebasestorage.app',
     measurementId: 'G-KPXZLGBRVG',
   );
 
@@ -61,7 +61,7 @@ class DefaultFirebaseOptions {
     appId: '1:758451723191:android:a64e6bf584fc48ff5ce632',
     messagingSenderId: '758451723191',
     projectId: 'ecommerce-ef479',
-    storageBucket: 'ecommerce-ef479.appspot.com',
+    storageBucket: 'ecommerce-ef479.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -69,7 +69,9 @@ class DefaultFirebaseOptions {
     appId: '1:758451723191:ios:36c127f6d9e9dcdb5ce632',
     messagingSenderId: '758451723191',
     projectId: 'ecommerce-ef479',
-    storageBucket: 'ecommerce-ef479.appspot.com',
+    storageBucket: 'ecommerce-ef479.firebasestorage.app',
+    androidClientId: '758451723191-0vbsscif01recf1dqge447jfo8ate29g.apps.googleusercontent.com',
+    iosClientId: '758451723191-l52g8pcvnqq095vjuluoavv73pelnq9d.apps.googleusercontent.com',
     iosBundleId: 'com.example.flutterApplication1',
   );
 

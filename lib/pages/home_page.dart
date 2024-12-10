@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     loadData();
+
+    if(FirebaseAuth.instance.currentUser == null){
+      Navigator.of(context).pushReplacementNamed(MyRoutes.loginRoute);
+    }
+
   }
   void loadData() async{
      await Future.delayed(Duration(seconds: 2));

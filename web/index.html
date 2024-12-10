@@ -20,6 +20,8 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
 
+  <meta name="google-signin-client_id" content="758451723191-lait11qnh69pehvcb4hmo2nsp8hief1l.apps.googleusercontent.com">
+
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -40,7 +42,31 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
-  <script>
+
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-app.js"></script>
+
+<!-- STEP 1: Add SDKs for Firebase products that you want to use
+   https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-analytics.js"></script>
+  <script type="module">
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCVBwkOMv0t9WB6ZgL252t6AKY8E9RcZIs",
+          authDomain: "ecommerce-ef479.firebaseapp.com",
+          projectId: "ecommerce-ef479",
+          storageBucket: "ecommerce-ef479.firebasestorage.app",
+          messagingSenderId: "758451723191",
+          appId: "1:758451723191:web:f4d33ff16ae1cec45ce632",
+          measurementId: "G-KPXZLGBRVG"
+        };
+
+        // Initialize Firebase
+       firebase.initializeApp(firebaseConfig);
+       firebase.analytics();
+
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
