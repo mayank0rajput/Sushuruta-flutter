@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,15 +17,38 @@ class _LoginPageState extends State<LoginPage> {
   bool changeButton = false;
   String name = "";
   void moveToHome(BuildContext context) async{
-    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    GoogleSignInAuthentication? gooleAuth = await googleUser?.authentication;
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: gooleAuth?.accessToken,
-      idToken: gooleAuth?.idToken
-    );
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    // UserCredential userCredential;
+    // if (!Platform.isAndroid &&
+    //     !Platform.isIOS) {
+    //   FirebaseAuth.instance.signInWithRedirect(GoogleAuthProvider());
+    //   userCredential = await
+    // }else{
+    //   GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    //   GoogleSignInAuthentication? gooleAuth = await googleUser?.authentication;
+    //   AuthCredential credential = GoogleAuthProvider.credential(
+    //       accessToken: gooleAuth?.accessToken,
+    //       idToken: gooleAuth?.idToken
+    //   );
+    //   userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    // }
 
-    User? user = userCredential.user;
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the Google user
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final userCredential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Sign in to Firebase with the credential
+    await FirebaseAuth.instance.signInWithCredential(userCredential);
+
+    User? user = FirebaseAuth.instance.currentUser;
+
     if(user != null){
       await Profile.saveUser(user.uid);
       await Profile.saveGuest(false);
@@ -46,6 +69,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacementNamed(context, MyRoutes.homeRoute);
     }
   }
+
   Widget build(BuildContext context){
     return Material(
       color: Colors.white,
@@ -127,5 +151,22 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
     );
+  }
+
+  Future<void> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the Google user
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Sign in to Firebase with the credential
+    await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
