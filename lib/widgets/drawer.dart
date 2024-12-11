@@ -108,6 +108,20 @@ class MyDrawer extends StatelessWidget {
             onTap: (){
               Navigator.pushNamed(context, MyRoutes.aboutPageRoute);
             },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout_sharp,
+              color: Drawer().surfaceTintColor,
+            ),
+            title: Text("Log Out",
+              style: TextStyle(
+                  color: Drawer().surfaceTintColor
+              ),),
+            onTap: ()async{
+              await FirebaseAuth.instance.signOut();
+              await Profile.clearData();
+              Navigator.pushNamed(context, MyRoutes.loginRoute);
+            },
           )
         ],
       ),

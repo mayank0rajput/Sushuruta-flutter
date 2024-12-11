@@ -50,6 +50,12 @@ class _LoginPageState extends State<LoginPage> {
     User? user = FirebaseAuth.instance.currentUser;
 
     if(user != null){
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text("Logging in as ${user.displayName}."),
+            duration: Duration(seconds: 5),
+          )
+      );
       await Profile.saveUser(user.uid);
       await Profile.saveGuest(false);
       await Profile.saveName(user.displayName!);
@@ -63,6 +69,12 @@ class _LoginPageState extends State<LoginPage> {
     UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
     User? user = userCredential.user;
     if(user != null){
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Logging in as guest."),
+            duration: Duration(seconds: 5),
+          )
+      );
       await Profile.saveUser(user.uid);
       await Profile.saveGuest(true);
       Profile.refreshCreditNewDay();
